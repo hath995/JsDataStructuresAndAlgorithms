@@ -1,0 +1,20 @@
+{
+  "name": "jsdatastructures",
+  "version": "0.0.0",
+  "description": "Basic datastructures implemented in Javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "algorithms",
+    "datastructures",
+    "data",
+    "structure"
+  ],
+  "author": "Aaron Elligsen",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "mocha": "~1.20.1"
+  }
+}

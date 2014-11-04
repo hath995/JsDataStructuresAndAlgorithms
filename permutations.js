@@ -1,6 +1,6 @@
 
-var identity = [1,2,3,4,5];
-var other = [3,2,4,5,1];
+//var identity = [1,2,3,4,5];
+//var other = [3,2,4,5,1];
 function multiplyPerm(lhs, rhs) {
   if(lhs.length !== rhs.length) {
     throw new Error("Permutations of different lengths cannot be multiplied");
@@ -29,6 +29,15 @@ function applyPerm(perm, items) {
   }
   return result;
 }
-console.log(multiplyPerm(identity, other)); //should get back other
-console.log(multiplyPerm(other, other)); //should get back [4,2,5,1,3];
+//console.log(multiplyPerm(identity, other)); //should get back other
+//console.log(multiplyPerm(other, other)); //should get back [4,2,5,1,3];
+module.exports.multiplyPerm = multiplyPerm;
+module.exports.inversePerm = function invertPerm(perm) {
+  var result = new Array(perm.length);
+  for(var i = 0; i <perm.length; i++) {
+    result[perm[i]-1]=i+1;
+  }
+  return result;
+ 
+}
 
