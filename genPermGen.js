@@ -1,20 +1,44 @@
 var perm = require('./permutations');
 
-function SimsPerm(xs, sims) {
+function SimsPerm(xs, sims, bannedSuffix) {
   if(!xs || !xs.length) {
     throw new Error("Array of items required");
   }
   this.items = xs;
   this.sims = sims; 
   this.control = new Array(xs.length);
+  this.bannedSuffix = bannedSuffix;
   for(var i = 0; i< this.control.length; i++) {
     this.control[i] = 0;
   }
 }
-
+function isAcceptableSuffix(elements, suffix) {
+  var accept = true;
+  for(var i = 0; i < suffix.length; i++) {
+    accept = accept && suffix[i] === elements[elements.length-suffix.length+i];
+  }
+  return !accept;
+}
 SimsPerm.prototype.next = function next() {
-  console.log(this.items+"");
-  var k = 1;
+  //console.log(this.items+"");
+  var k = this.items.length;
+  while(k > 0) {
+    if(isAcceptableSuffix(this.items, this.bannedSuffix)) {
+      k=k-this.bannedSuffix.length;
+    }else{
+      while(this.control[k-1] === k) {
+        this.items = perm.multiplyPerm(perm.inversePerm(this.sims[k-1][k-1]),this.items);
+        this.control[k-1] = 0;
+        k++
+        if(k === this.items.length) {
+          return null;
+        }
+      }
+      this.control[k-1]++;
+      this.items = perm.multiplyPerm(this.tau(k,this.control[k-1]),this.items);
+    }
+  } 
+  k = 1;
   while(this.control[k-1] === k) {
     this.control[k-1] = 0;
     k++
@@ -27,7 +51,8 @@ SimsPerm.prototype.next = function next() {
   //console.log(" "+this.control+ " k="+k+" Ck="+this.control[k-1]);
   //var holycow = this.brute();
   var holycow =perm.multiplyPerm(this.tau(k,this.control[k-1]), this.omega(k-1 ,this.items));
-  this.items = holycow ;
+  this.items = holycow;
+  return this.items;
 }
 
 SimsPerm.prototype.brute = function() {
@@ -60,8 +85,9 @@ var otherSims = [
   [[1,2,3,4],[3,1,2,4],[2,3,1,4]],
   [[1,2,3,4],[4,1,2,3],[3,4,1,2],[2,3,4,1]]
 ];
-var test = new SimsPerm([1,2,3,4],otherSims);
-while(test.next()!==null) {
-
+var test = new SimsPerm([1,2,3,4],otherSims, [1,5]);
+var permutation
+while((permutation = test.next())!==null) {
+console.log(permutation);
 }
 
