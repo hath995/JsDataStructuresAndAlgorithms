@@ -202,6 +202,57 @@ BST.prototype = {
  
     return this;
   },
+  deleteAVL: function(key) {
+    if(key < this.key) {
+      if(this.left) {
+        this.left = this.left.deleteAVL(key);
+      }
+    } else if(key > this.key) {
+      if(this.right) {
+        this.right = this.right.deleteAVL(key);
+      }
+    } else {
+      if(!this.left || !this.right) {
+        if(!this.left && !this.right) {
+          return null;
+        }
+        return this.left ? this.left : this.right;
+      }else{
+        var temp = this.right ? this.right.minimum() : null;
+        this.key = temp.key;
+        this.val = temp.val;
+        this.right = this.temp.deleteAVL();
+      }
+
+    }
+    this.updateSize();
+    this.findHeight();
+    var balance = this.getBalance();
+    var rightBalance = 0;
+    var leftBalance = 0;
+    if(this.right) {
+      rightBalance = this.right.getBalance();
+    }
+    if(this.left) {
+      leftBalance = this.left.getBalance();
+    }
+    if(balance > 1 && leftBalance >= 0) {
+      return this.rotateRight();
+    }
+    if(balance > 1 && leftBalance < 0) {
+      this.left = this.left.rotateLeft();
+      return this.rotateRight();
+    } 
+    if(balance < -1 && rightBalance <= 0) {
+      return this.rotateLeft();
+    }
+    if(balance < -1 && rightBalance > 0) {
+      this.right = this.left.rotateRight();
+      return this.rotateLeft();
+    }
+    return this;
+
+  },
   fmap: function(fn) {
     var result = new BST(this.key,fn(this.value),this.parent);
     if(this.left) {
